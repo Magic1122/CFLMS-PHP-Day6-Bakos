@@ -4,11 +4,13 @@
     <div class="col-md-6">
         <h1>Medias from <?= $data['medias'][0]->publisher_name ?></h1>
     </div>
+    <?php if ($_SESSION['admin']) : ?>
     <div class="col-md-6">
         <a href="<?php echo URLROOT ?>/medias/add" class="btn btn-primary pull-right">
             <i class="fa fa-pencil"></i> Add Media
         </a>
     </div>
+    <?php endif; ?>
 </div>
 <h1>Book</h1>
 <div class="row mt-5 d-flex justify-content-center">

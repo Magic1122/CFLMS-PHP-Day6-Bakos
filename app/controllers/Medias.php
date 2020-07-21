@@ -51,120 +51,125 @@ class Medias extends Controller
     // Adds a media
 
     public function add()
-    {
-        $publishers = $this->mediaModel->getPublishers();
-        $authors = $this->mediaModel->getAuthors();
+    {   
+        if ($_SESSION['admin']) {
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST array
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-
-            $data = [
-                'title' => trim($_POST['title']),
-                'isbn_asin' => trim($_POST['isbn_asin']),
-                'description' => trim($_POST['description']),
-                'genre' => trim($_POST['genre']),
-                'img' => trim($_POST['img']),
-                'year' => trim($_POST['year']),
-                'type' => $_POST['type'],
-                'author' => $_POST['author'],
-                'publisher' => $_POST['publisher'],
-                'title_err' => '',
-                'isbn_asin_err' => '',
-                'description_err' => '',
-                'genre_err' => '',
-                'img_err' => '',
-                'year_err' => '',
-                'type_err' => '',
-                'author_err' => '',
-                'publisher_err' => '',
-                'publishers' => $publishers,
-                'authors' => $authors,
-            ];
-
-            // Validate data
-            if (empty($data['title'])) {
-                $data['title_err'] = 'Please enter title';
-            }
-
-            if (empty($data['isbn_asin'])) {
-                $data['isbn_asin_err'] = 'Please enter a valid isbn/asin';
-            }
-
-            if (empty($data['description'])) {
-                $data['description_err'] = 'Please enter a description';
-            }
-
-            if (empty($data['genre'])) {
-                $data['genre_err'] = 'Please enter a genre';
-            }
-
-            if (empty($data['img'])) {
-                $data['img_err'] = 'Please add an img url';
-            } elseif (!validImage($data['img'])) {
-                $data['img_err'] = 'Please add a valid url';
-            }
-
-            if (empty($data['year'])) {
-                $data['year_err'] = 'Please add a relese year';
-            } elseif (strlen($data['year']) != 4) {
-                $data['year_err'] = 'Year must be in a 4 digits format (YYYY)';
-            }
-
-            if (empty($data['type'])) {
-                $data['type_err'] = 'Please choose a type';
-            }
-
-            if (empty($data['author'])) {
-                $data['author_err'] = 'Please choose an author';
-            }
-
-            if (empty($data['publisher'])) {
-                $data['publisher_err'] = 'Please choose a publisher';
-            }
-
-
-
-            // Make sure no errors
-            if (
-                empty($data['title_err'])
-                && empty($data['isbn_asin_err'])
-                && empty($data['description_err'])
-                && empty($data['genre_err'])
-                && empty($data['img_err'])
-                && empty($data['year_err'])
-                && empty($data['type_err'])
-                && empty($data['author_err'])
-                && empty($data['publisher_err'])
-            ) {
-                // Validated
-                if ($this->mediaModel->addMedia($data)) {
-                    flash('media_message', 'Media Added');
-                    redirect('medias');
+            $publishers = $this->mediaModel->getPublishers();
+            $authors = $this->mediaModel->getAuthors();
+    
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                // Sanitize POST array
+                $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+    
+    
+                $data = [
+                    'title' => trim($_POST['title']),
+                    'isbn_asin' => trim($_POST['isbn_asin']),
+                    'description' => trim($_POST['description']),
+                    'genre' => trim($_POST['genre']),
+                    'img' => trim($_POST['img']),
+                    'year' => trim($_POST['year']),
+                    'type' => $_POST['type'],
+                    'author' => $_POST['author'],
+                    'publisher' => $_POST['publisher'],
+                    'title_err' => '',
+                    'isbn_asin_err' => '',
+                    'description_err' => '',
+                    'genre_err' => '',
+                    'img_err' => '',
+                    'year_err' => '',
+                    'type_err' => '',
+                    'author_err' => '',
+                    'publisher_err' => '',
+                    'publishers' => $publishers,
+                    'authors' => $authors,
+                ];
+    
+                // Validate data
+                if (empty($data['title'])) {
+                    $data['title_err'] = 'Please enter title';
+                }
+    
+                if (empty($data['isbn_asin'])) {
+                    $data['isbn_asin_err'] = 'Please enter a valid isbn/asin';
+                }
+    
+                if (empty($data['description'])) {
+                    $data['description_err'] = 'Please enter a description';
+                }
+    
+                if (empty($data['genre'])) {
+                    $data['genre_err'] = 'Please enter a genre';
+                }
+    
+                if (empty($data['img'])) {
+                    $data['img_err'] = 'Please add an img url';
+                } elseif (!validImage($data['img'])) {
+                    $data['img_err'] = 'Please add a valid url';
+                }
+    
+                if (empty($data['year'])) {
+                    $data['year_err'] = 'Please add a relese year';
+                } elseif (strlen($data['year']) != 4) {
+                    $data['year_err'] = 'Year must be in a 4 digits format (YYYY)';
+                }
+    
+                if (empty($data['type'])) {
+                    $data['type_err'] = 'Please choose a type';
+                }
+    
+                if (empty($data['author'])) {
+                    $data['author_err'] = 'Please choose an author';
+                }
+    
+                if (empty($data['publisher'])) {
+                    $data['publisher_err'] = 'Please choose a publisher';
+                }
+    
+    
+    
+                // Make sure no errors
+                if (
+                    empty($data['title_err'])
+                    && empty($data['isbn_asin_err'])
+                    && empty($data['description_err'])
+                    && empty($data['genre_err'])
+                    && empty($data['img_err'])
+                    && empty($data['year_err'])
+                    && empty($data['type_err'])
+                    && empty($data['author_err'])
+                    && empty($data['publisher_err'])
+                ) {
+                    // Validated
+                    if ($this->mediaModel->addMedia($data)) {
+                        flash('media_message', 'Media Added');
+                        redirect('medias');
+                    } else {
+                        die('Something went wrong');
+                    }
                 } else {
-                    die('Something went wrong');
+                    // Load view with errors
+                    $this->view('medias/add', $data);
                 }
             } else {
-                // Load view with errors
+                $data = [
+                    'title' => '',
+                    'isbn_asin' => '',
+                    'description' => '',
+                    'genre' => '',
+                    'img' => '',
+                    'year' => '',
+                    'type' => '',
+                    'author' => '',
+                    'publisher' => '',
+                    'publishers' => $publishers,
+                    'authors' => $authors
+                ];
+    
                 $this->view('medias/add', $data);
             }
         } else {
-            $data = [
-                'title' => '',
-                'isbn_asin' => '',
-                'description' => '',
-                'genre' => '',
-                'img' => '',
-                'year' => '',
-                'type' => '',
-                'author' => '',
-                'publisher' => '',
-                'publishers' => $publishers,
-                'authors' => $authors
-            ];
-
-            $this->view('medias/add', $data);
+            redirect('medias');
         }
     }
 
